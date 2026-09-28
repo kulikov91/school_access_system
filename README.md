@@ -2,8 +2,21 @@
 
 Стек: Python, Flask, Jinja/HTML/CSS, PostgreSQL, psycopg, pytest.
 
-## Обновление существующей БД
-Выполнить:
+## Подготовка базы данных
+Проект разрабатывался поэтапно, поэтому изменения структуры базы данных
+оформлены отдельными SQL-миграциями.
+
+### Первоначальное создание базы данных
+
+Создайте базу данных:
+
+createdb -U postgres school_access
+
+Выполнить последовательно исходную схему миграции:
+
+    psql -h 127.0.0.1 -p 5432 -U postgres -d school_access -f database/schema.sql
+
+    psql -h 127.0.0.1 -p 5432 -U postgres -d school_access -f database/stage2_migration.sql
 
     psql -h 127.0.0.1 -p 5432 -U postgres -d school_access -f database/stage3_migration.sql
 
