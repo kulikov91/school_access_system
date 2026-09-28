@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="pagehead"><h1>{{'Изменение' if row else 'Добавление'}} родителя</h1></div>
+<form class="panel formgrid" method="post">
+  <label>Фамилия*<input name="last_name" required value="{{row[1] if row else ''}}"></label>
+  <label>Имя*<input name="first_name" required value="{{row[2] if row else ''}}"></label>
+  <label>Отчество<input name="middle_name" value="{{row[3] or '' if row else ''}}"></label>
+  <label>Телефон*<input name="phone" required value="{{row[4] if row else ''}}"></label>
+  <label>E-mail*<input type="email" name="email" required value="{{row[5] if row else ''}}"></label>
+
+  <div class="relation-box">
+    <h3>Связь с учащимся</h3>
+    <p class="muted">Выберите учащегося и укажите степень родства. Одного родителя можно связать с несколькими учащимися.</p>
+    <div class="relation-grid">
+      <label>Учащийся
+        <select name="id_student">
+          <option value="">Не выбирать</option>
+          {% for s in students %}
+          <option value="{{s[0]}}">{{s[1]}} {{s[2]}} {{s[3] or ''}} — {{s[4]}}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label>Степень родства
+        <select name="relationship">
+          <option value="мать">мать</option>
+          <option value="отец">отец</option>
+          <option value="опекун">опекун</option>
+          <option value="родитель">родитель</option>
+        </select>
+      </label>
+    </div>
+  </div>
+
+  {% if row and linked_students %}
+  <div>
+    <h3>Связанные учащиеся</h3>
+    <div class="tablewrap">
+      <table>
+        <tr><th>Учащийся</th><th>Класс</th><th>Связь</th><th></th></tr>
+        {% for s in linked_students %}
+        <tr>
+          <td>{{s[1]}} {{s[2]}} {{s[3] or ''}}</td><td>{{s[4]}}</td><td>{{s[5]}}</td>
+          <td><button class="link danger" type="submit" form="unlink-{{s[0]}}">Удалить связь</button></td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+  </div>
+  {% endif %}
+
+  <div><button>Сохранить</button> <a href="{{url_for('parents')}}">Назад к списку</a></div>
+</form>
+{% if row %}
+  {% for s in linked_students %}
+  <form id="unlink-{{s[0]}}" method="post" action="{{url_for('parent_student_delete',parent_id=row[0],student_id=s[0])}}"></form>
+  {% endfor %}
+{% endif %}
+{% endblock %}
