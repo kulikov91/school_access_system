@@ -12,7 +12,7 @@
 
 createdb -U postgres school_access
 
-Выполнить последовательно исходную схему миграции:
+Выполнить последовательно исходную схему и миграции:
 
     psql -h 127.0.0.1 -p 5432 -U postgres -d school_access -f database/schema.sql
 
